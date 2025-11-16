@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SDL2/SDL.h>
 
 class Game {
@@ -16,4 +17,7 @@ class Game {
         void Update();
         void Render();
         void Destroy();
+
+        int windowWidth;
+        int windowHeight;
 };
