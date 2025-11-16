@@ -4,7 +4,7 @@ CXXFLAGS = -Wall -std=c++17 -Ilibs -Ilibs/sol
 
 # Source and target settings
 SRC = $(wildcard src/*.cpp)
-TARGET = gameengine
+TARGET = Engine
 
 # Build rule
 build: $(SRC)

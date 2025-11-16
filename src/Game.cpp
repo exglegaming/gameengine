@@ -17,7 +17,7 @@ void Game::Initialize() {
     }
     
     window = SDL_CreateWindow(
-        "2D Game Engine", 
+        NULL, 
         SDL_WINDOWPOS_CENTERED, 
         SDL_WINDOWPOS_CENTERED, 
         800,
@@ -55,11 +55,16 @@ void Game::ProcessInput() {
 }
 
 void Game::Update() {
-    
+    // TODO: Update game objects...
 }
 
 void Game::Render() {
-    
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    // TODO: Render all game objects...
+
+    SDL_RenderPresent(renderer);
 }
 
 void Game::Run() {
