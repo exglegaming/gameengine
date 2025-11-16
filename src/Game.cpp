@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <SDL2/SDL.h>
 #include <iostream>
 
 Game::Game() {
@@ -10,29 +11,51 @@ Game::~Game() {
 }
 
 void Game::Initialize() {
-    // TODO...
-}
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+        std::cerr << "Error initializing SDL." << std::endl;
+        return;
+    }
+    
+    SDL_Window* window = SDL_CreateWindow(
+        "Game Engine", 
+        SDL_WINDOWPOS_CENTERED, 
+        SDL_WINDOWPOS_CENTERED, 
+        800,
+        600,
+        SDL_WINDOW_SHOWN
+    );
+    if (!window) {
+        std::cerr << "Error creating SDL Window." << std::endl;
+        return;
+    }
 
-void Game::Run() {
-    while (true) {
-        ProcessInput();
-        Update();
-        Render();
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    if (!renderer) {
+        std::cerr << "Error creating SDL Renderer." << std::endl;
+        return;
     }
 }
 
 void Game::ProcessInput() {
-    // TODO...
+    
 }
 
 void Game::Update() {
-    // TODO...
+    
 }
 
 void Game::Render() {
-    // TODO...
+    
+}
+
+void Game::Run() {
+    // while (true) {
+    //     ProcessInput();
+    //     Update();
+    //     Render();
+    // }
 }
 
 void Game::Destroy() {
-    // TODO...
+    
 }
