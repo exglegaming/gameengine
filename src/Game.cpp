@@ -80,7 +80,7 @@ void Game::Update() {
     // Difference in ticks from last frame, converrted to seconds
     double deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
 
-    // store the current frame time
+    // store the "previous" frame time
     millisecsPreviousFrame = SDL_GetTicks();
 
     playerPosition.x += playerVelocity.x * deltaTime;
