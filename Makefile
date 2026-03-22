@@ -19,7 +19,8 @@ else
     TARGET_BIN = $(TARGET)
     RM         = rm -f
     RUN_CMD    = ./$(TARGET_BIN)
-    LIBS       = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -llua5.3
+    LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -llua5.4
+    CXXFLAGS += -I/opt/homebrew/include -L/opt/homebrew/lib
 endif
 
 # Build rule

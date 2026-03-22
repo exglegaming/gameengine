@@ -9,7 +9,11 @@ std::string CurrentDateTimeToString() {
 	std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
 	tm timeInfo;
-	localtime_s(&timeInfo, &now);
+	#ifdef _WIN32
+    	localtime_s(&timeInfo, &now);
+	#else
+    	localtime_r(&now, &timeInfo);
+	#endif
 
 	std::string output(30, '\0');
 	std::strftime(&output[0], output.size(), "%d-%b-%Y %H:%M:%S", &timeInfo);
