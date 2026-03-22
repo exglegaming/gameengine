@@ -42,7 +42,10 @@ void Game::Initialize() {
         Logger::Err("Error creating SDL Renderer.");
         return;
     }
-    //  SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+    // SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+	SDL_SetWindowFullscreen(window, 0);
+	SDL_SetWindowSize(window, 1280, 720);
+	SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
     isRunning = true;
 }

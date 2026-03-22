@@ -9,7 +9,7 @@ TARGET = Engine
 # OS detection
 ifeq ($(OS), Windows_NT)
     TARGET_BIN = $(TARGET).exe
-    RM         = del /f
+    RM         = rm -f
     RUN_CMD    = ./$(TARGET_BIN)
     LIBS       = -lmingw32 -lSDL2main -lSDL2 -lSDL2_image \
                  -lSDL2_ttf -lSDL2_mixer -llua
