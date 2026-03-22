@@ -1,47 +1,48 @@
 #include "Game.h"
+#include "Logger.h"
 #include <SDL2/SDL_image.h>
 #include <glm/glm.hpp>
 #include <iostream>
 
 Game::Game() {
     isRunning = false;
-    std::cout << "Game Constructor Called" << std::endl;
+    Logger::Log("Game Constructor Called");
 }
 
 Game::~Game() {
-    std::cout << "Game Deconstructor Called" << std::endl;
+    Logger::Log("Game Deconstructor Called");
 }
 
 void Game::Initialize() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        std::cerr << "Error initializing SDL." << std::endl;
+        Logger::Err("Error initializing SDL.");
         return;
     }
-    
+
     SDL_DisplayMode displayMode;
     SDL_GetCurrentDisplayMode(0, &displayMode);
     windowWidth = displayMode.w;
     windowHeight = displayMode.h;
 
     window = SDL_CreateWindow(
-        NULL, 
-        SDL_WINDOWPOS_CENTERED, 
-        SDL_WINDOWPOS_CENTERED, 
+        NULL,
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
         windowWidth,
         windowHeight,
         SDL_WINDOW_SHOWN
     );
     if (!window) {
-        std::cerr << "Error creating SDL Window." << std::endl;
+        Logger::Err("Error creating SDL Window.");
         return;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer) {
-        std::cerr << "Error creating SDL Renderer." << std::endl;
+        Logger::Err("Error creating SDL Renderer.");
         return;
     }
-    // SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+    //  SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
     isRunning = true;
 }
@@ -50,14 +51,14 @@ void Game::ProcessInput() {
     SDL_Event sdlEvent;
     while (SDL_PollEvent(&sdlEvent)) {
         switch (sdlEvent.type) {
-            case SDL_QUIT:
+        case SDL_QUIT:
+            isRunning = false;
+            break;
+        case SDL_KEYDOWN:
+            if (sdlEvent.key.keysym.sym == SDLK_ESCAPE) {
                 isRunning = false;
-                break;
-            case SDL_KEYDOWN:
-                if (sdlEvent.key.keysym.sym == SDLK_ESCAPE) {
-                    isRunning = false;
-                }
-                break;
+            }
+            break;
         }
     }
 }
@@ -97,11 +98,11 @@ void Game::Render() {
     SDL_FreeSurface(surface);
 
     // What is the destingation rectangle that we want to place our texture
-    SDL_Rect dstRect = { 
-        static_cast<int>(playerPosition.x), 
-        static_cast<int>(playerPosition.y), 
-        32, 
-        32 
+    SDL_Rect dstRect = {
+        static_cast<int>(playerPosition.x),
+        static_cast<int>(playerPosition.y),
+        32,
+        32
     };
     SDL_RenderCopy(renderer, texture, NULL, &dstRect);
     SDL_DestroyTexture(texture);
