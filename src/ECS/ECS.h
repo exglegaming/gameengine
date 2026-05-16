@@ -2,6 +2,8 @@
 
 #include <bitset>
 #include <vector>
+#include <unordered_map>
+#include <typeindex>
 
 const unsigned int MAX_COMPONENTS = 32;
 
@@ -80,51 +82,51 @@ class Pool : public IPool
 		std::vector<T> data;
 
 	public:
-		Pool(int size = 100)
-		{
-			data.resize(size);
+		Pool(int size = 100) 
+		{ 
+			data.resize(size); 
 		}
 
 		virtual ~Pool() = default;
 
-		bool isEmpty() const
-		{
-			return data.empty();
+		bool isEmpty() const 
+		{ 
+			return data.empty(); 
 		}
 
-		int GetSize() const
-		{
-			return data.size();
+		int GetSize() const 
+		{ 
+			return data.size(); 
 		}
 
-		void Resize(int n)
-		{
-			data.resize(n);
+		void Resize(int n) 
+		{ 
+			data.resize(n); 
 		}
 
-		void Clear()
-		{
-			data.clear();
+		void Clear() 
+		{ 
+			data.clear(); 
 		}
 
-		void Add(T object)
-		{
-			data.push_back(object);
+		void Add(T object) 
+		{ 
+			data.push_back(object); 
 		}
 
-		void Set(int index, T object)
-		{
-			data[index] = object;
+		void Set(int index, T object) 
+		{ 
+			data[index] = object; 
 		}
 
-		T& Get(int index)
-		{
-			return static_cast<T&>(data[index]);
+		T& Get(int index) 
+		{ 
+			return static_cast<T&>(data[index]); 
 		}
 
-		T& operator [](unsigned int index)
-		{
-			return data[index];
+		T& operator [](unsigned int index) 
+		{ 
+			return data[index]; 
 		}
 };
 
@@ -137,9 +139,32 @@ class Registry
 		int numEntities = 0;
 
 		// Vector of component pools, each pool contains all the data for a certain component type
-		// Vector index = component type id
-		// Pool index = entity id
+		// [Vector index = component type id]
+		// [Pool index = entity id]
 		std::vector<IPool*> componentPools;
+
+		// Vecotr of component signatures per entity, saying which component is turned "on" for a given entity
+		// [Vector incex = entity id]
+		std::vector<Signature> entityComponentSignature;
+
+		std::unordered_map<std::type_index, System*> systems;
+	
+	public:
+		Registry() = default;
+
+		// TODO:
+		// CreateEntity()
+		// KillEntity()
+		//
+		// AddComponent(Entity entity)
+		// RemoveComponet(Entity entity)
+		// HasComponent(Entity entity)
+		// GetComponent(Entity entity)
+		//
+		// AddSystem()
+		// RemoveSystem()
+		// HasSystem()
+		// GetSystem()
 };
 
 // Implementation of the function template
