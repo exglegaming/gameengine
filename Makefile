@@ -3,7 +3,7 @@ CXX = g++
 CXXFLAGS = -Wall -Wfatal-errors 
 LANG_STD = -std=c++17 
 INCLUDE_PATH = -Ilibs -Ilibs/sol
-SRC = $(wildcard src/*.cpp src/Game/*.cpp src/Logger/*.cpp)
+SRC = $(wildcard src/*.cpp src/Game/*.cpp src/Logger/*.cpp src/ECS/*.cpp)
 TARGET = Engine
 
 # OS detection
