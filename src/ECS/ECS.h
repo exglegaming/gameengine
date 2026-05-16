@@ -2,6 +2,7 @@
 
 #include <bitset>
 #include <vector>
+#include <set>
 #include <unordered_map>
 #include <typeindex>
 
@@ -148,23 +149,28 @@ class Registry
 		std::vector<Signature> entityComponentSignature;
 
 		std::unordered_map<std::type_index, System*> systems;
-	
+
+		// Set of entities that are flaggeds to be added or removed in the next registry Update()
+		std::set<Entity> entitiesToBeAdded;
+		std::set<Entity> entitiesToBeKilled;
+
 	public:
 		Registry() = default;
 
+		void Update();
+
+		Entity CreateEntity();
+
+		// TODO: AddComponent<T>(...);
+
+		void AddEntityToSystem(Entity entity);
+
 		// TODO:
-		// CreateEntity()
-		// KillEntity()
 		//
 		// AddComponent(Entity entity)
-		// RemoveComponet(Entity entity)
-		// HasComponent(Entity entity)
 		// GetComponent(Entity entity)
 		//
 		// AddSystem()
-		// RemoveSystem()
-		// HasSystem()
-		// GetSystem()
 };
 
 // Implementation of the function template
