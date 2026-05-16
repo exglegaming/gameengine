@@ -1,14 +1,17 @@
 #pragma once
 
-class MovementSystem : public System {
+class MovementSystem : public System 
+{
 	public:
-		MovementSystem() {
+		MovementSystem() 
+		{
 			// TODO: 
 			// RequireComponent<TransformComponent>();
 			// RequireComponent<...>();
 		}
 
-		void Update() {
+		void Update() 
+		{
 			// TODO:
 			// Loop all entities that the system is interested in
 			// for (auto entity: GetEntities()) {

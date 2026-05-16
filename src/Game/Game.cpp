@@ -5,17 +5,20 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-Game::Game() {
+Game::Game() 
+{
     isRunning = false;
     Logger::Log("Game Constructor Called");
 }
 
-Game::~Game() {
+Game::~Game() 
+{
     Logger::Log("Game Deconstructor Called");
 }
 
 void Game::Initialize() {
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) 
+	{
         Logger::Err("Error initializing SDL.");
         return;
     }
@@ -53,15 +56,19 @@ void Game::Initialize() {
     isRunning = true;
 }
 
-void Game::ProcessInput() {
+void Game::ProcessInput() 
+{
     SDL_Event sdlEvent;
-    while (SDL_PollEvent(&sdlEvent)) {
-        switch (sdlEvent.type) {
+    while (SDL_PollEvent(&sdlEvent)) 
+	{
+        switch (sdlEvent.type) 
+		{
         case SDL_QUIT:
             isRunning = false;
             break;
         case SDL_KEYDOWN:
-            if (sdlEvent.key.keysym.sym == SDLK_ESCAPE) {
+            if (sdlEvent.key.keysym.sym == SDLK_ESCAPE) 
+			{
                 isRunning = false;
             }
             break;
@@ -69,7 +76,8 @@ void Game::ProcessInput() {
     }
 }
 
-void Game::Setup() {
+void Game::Setup() 
+{
     // TODO:
 	// Entity tank = registry.CreateEntity
 	// tank.AddComponent<TransformComponent>();
@@ -77,10 +85,12 @@ void Game::Setup() {
 	// tank.AddComponet<SpriteComponent>("./assets/images/tank.png");
 }
 
-void Game::Update() {
+void Game::Update() 
+{
     // If we are too fast, waste time until we reach the MILLISECS_PER_FRAME
     int timeToWait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecsPreviousFrame);
-    if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME) {
+    if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME) 
+	{
         SDL_Delay(timeToWait);
     }
 
@@ -96,7 +106,8 @@ void Game::Update() {
 	// DamageSystem.Update();
 }
 
-void Game::Render() {
+void Game::Render() 
+{
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
 
@@ -105,16 +116,19 @@ void Game::Render() {
     SDL_RenderPresent(renderer);
 }
 
-void Game::Run() {
+void Game::Run() 
+{
     Setup();
-    while (isRunning) {
+    while (isRunning) 
+	{
         ProcessInput();
         Update();
         Render();
     }
 }
 
-void Game::Destroy() {
+void Game::Destroy() 
+{
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
