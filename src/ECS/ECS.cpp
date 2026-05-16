@@ -1,4 +1,5 @@
 #include "ECS.h"
+#include <algorithm>
 
 int Entity::GetId() const 
 {
@@ -13,7 +14,7 @@ void System::AddEntityToSystem(Entity entity)
 
 void System::RemoveEntityFromSystem(Entity entity)
 {
-	entities.erase(std::__remove_if(entities.begin(), entities.end(), [&entity](Entity other) 
+	entities.erase(std::remove_if(entities.begin(), entities.end(), [&entity](Entity other) 
 	{
 		return entity == other;
 	}), entities.end());
