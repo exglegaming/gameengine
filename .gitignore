@@ -3,3 +3,4 @@
 *.exe
 gameengine
 Engine
+build/
