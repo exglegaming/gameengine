@@ -165,14 +165,8 @@ class Registry
 
 		// Componet management
 		template <typename TComponent, typename ...TArgs> void AddComponent(Entity entity, TArgs&& ...args);
-
-		// Ask to RemoveComponent<T> from an entity
 		template <typename T> void RemoveComponent(Entity entity);
-
-		// Checks if an entity HasComponent<T>()
 		template <typename T> bool HasComponent(Entity entity);
-
-		void AddEntityToSystem(Entity entity);
 };
 
 // Implementation of the function template
@@ -214,20 +208,18 @@ void Registry::AddComponent(Entity entity, TArgs&& ...args)
 	entityComponentSignatures[entityId].set(componentId);
 }
 
-template <typename T>
+template <typename TComponent>
 void Registry::RemoveComponent(Entity entity)
 {
 	const auto componentId = Component<T>::GetId();
 	const auto entityId = entity.GetId();
-
 	entityComponentSignatures[entityId].set(componentId, false);
 }
 
-template <typename T>
+template <typename TComponent>
 bool Registry::HasComponent(Entity entity)
 {
 	const auto componentId = Component<T>::GetId();
 	const auto entityId = entity.GetId();
-
 	return entityComponentSignatures[entityId].test(componentId);
 }
