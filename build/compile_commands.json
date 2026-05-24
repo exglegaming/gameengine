@@ -1,0 +1,26 @@
+[
+{
+  "directory": "I:/github.com/exglegaming/CPP/gameengine - Copy/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -I\"I:/github.com/exglegaming/CPP/gameengine - Copy/libs\" -I\"I:/github.com/exglegaming/CPP/gameengine - Copy/libs/sol\" -IC:/msys64/mingw64/include/SDL2 -g -std=c++17 -Wall -Wfatal-errors -o CMakeFiles\\Engine.dir\\src\\ECS\\ECS.cpp.obj -c \"I:\\github.com\\exglegaming\\CPP\\gameengine - Copy\\src\\ECS\\ECS.cpp\"",
+  "file": "I:/github.com/exglegaming/CPP/gameengine - Copy/src/ECS/ECS.cpp",
+  "output": "I:/github.com/exglegaming/CPP/gameengine - Copy/build/CMakeFiles/Engine.dir/src/ECS/ECS.cpp.obj"
+},
+{
+  "directory": "I:/github.com/exglegaming/CPP/gameengine - Copy/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -I\"I:/github.com/exglegaming/CPP/gameengine - Copy/libs\" -I\"I:/github.com/exglegaming/CPP/gameengine - Copy/libs/sol\" -IC:/msys64/mingw64/include/SDL2 -g -std=c++17 -Wall -Wfatal-errors -o CMakeFiles\\Engine.dir\\src\\Game\\Game.cpp.obj -c \"I:\\github.com\\exglegaming\\CPP\\gameengine - Copy\\src\\Game\\Game.cpp\"",
+  "file": "I:/github.com/exglegaming/CPP/gameengine - Copy/src/Game/Game.cpp",
+  "output": "I:/github.com/exglegaming/CPP/gameengine - Copy/build/CMakeFiles/Engine.dir/src/Game/Game.cpp.obj"
+},
+{
+  "directory": "I:/github.com/exglegaming/CPP/gameengine - Copy/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -I\"I:/github.com/exglegaming/CPP/gameengine - Copy/libs\" -I\"I:/github.com/exglegaming/CPP/gameengine - Copy/libs/sol\" -IC:/msys64/mingw64/include/SDL2 -g -std=c++17 -Wall -Wfatal-errors -o CMakeFiles\\Engine.dir\\src\\Logger\\Logger.cpp.obj -c \"I:\\github.com\\exglegaming\\CPP\\gameengine - Copy\\src\\Logger\\Logger.cpp\"",
+  "file": "I:/github.com/exglegaming/CPP/gameengine - Copy/src/Logger/Logger.cpp",
+  "output": "I:/github.com/exglegaming/CPP/gameengine - Copy/build/CMakeFiles/Engine.dir/src/Logger/Logger.cpp.obj"
+},
+{
+  "directory": "I:/github.com/exglegaming/CPP/gameengine - Copy/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -I\"I:/github.com/exglegaming/CPP/gameengine - Copy/libs\" -I\"I:/github.com/exglegaming/CPP/gameengine - Copy/libs/sol\" -IC:/msys64/mingw64/include/SDL2 -g -std=c++17 -Wall -Wfatal-errors -o CMakeFiles\\Engine.dir\\src\\Main.cpp.obj -c \"I:\\github.com\\exglegaming\\CPP\\gameengine - Copy\\src\\Main.cpp\"",
+  "file": "I:/github.com/exglegaming/CPP/gameengine - Copy/src/Main.cpp",
+  "output": "I:/github.com/exglegaming/CPP/gameengine - Copy/build/CMakeFiles/Engine.dir/src/Main.cpp.obj"
+}
+]
