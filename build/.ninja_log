@@ -1,6 +1,0 @@
-# ninja log v6
-17	515	8013046149195423	CMakeFiles/Engine.dir/src/Logger/Logger.cpp.obj	4a5a4060d8fa90cb
-23	754	8013046149256467	CMakeFiles/Engine.dir/src/Main.cpp.obj	c3f3ae164e2a5691
-3	548	8013046149058516	CMakeFiles/Engine.dir/src/ECS/ECS.cpp.obj	56646abf06457168
-11	1129	8013046149133347	CMakeFiles/Engine.dir/src/Game/Game.cpp.obj	2b0096d0707a8b7b
-1130	1351	8013046160327819	Engine.exe	e7b6e6109ae5c8b2

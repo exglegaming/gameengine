@@ -1,3 +1,0 @@
-I:/github.com/exglegaming/CPP/gameengine - Copy/build/CMakeFiles/Engine.dir
-I:/github.com/exglegaming/CPP/gameengine - Copy/build/CMakeFiles/edit_cache.dir
-I:/github.com/exglegaming/CPP/gameengine - Copy/build/CMakeFiles/rebuild_cache.dir
