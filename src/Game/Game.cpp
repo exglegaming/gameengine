@@ -32,8 +32,8 @@ void Game::Initialize() {
         NULL,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        windowWidth,
-        windowHeight,
+        1280,
+        720,
         SDL_WINDOW_SHOWN
     );
     if (!window) {
