@@ -21,6 +21,8 @@ std::string CurrentDateTimeToString()
 	return output;
 }
 
+/// @brief Logs messages to the console.
+/// @param message Your message to display to the console.
 void Logger::Log(const std::string& message) 
 {
 	LogEntry logEntry;
