@@ -4,3 +4,4 @@
 gameengine
 Engine
 build/
+.cache/
