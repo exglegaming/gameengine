@@ -82,7 +82,7 @@ void Game::Setup()
 	// Entity tank = registry.CreateEntity
 	// tank.AddComponent<TransformComponent>();
 	// tank.AddComponent<BoxColliderComponent>();
-	// tank.AddComponet<SpriteComponent>("./assets/images/tank.png");
+	// tank.AddComponent<SpriteComponent>("./assets/images/tank.png");
 }
 
 void Game::Update() 
