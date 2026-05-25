@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Logger/Logger.h"
 #include <bitset>
 #include <vector>
 #include <set>
@@ -143,20 +144,28 @@ class Registry
 		// Vector of component pools, each pool contains all the data for a certain component type
 		// [Vector index = component type id]
 		// [Pool index = entity id]
-		std::vector<IPool*> component_pools;
+		std::vector<std::shared_ptr<IPool>> component_pools;
 
 		// Vecotr of component signatures per entity, saying which component is turned "on" for a given entity
 		// [Vector incex = entity id]
 		std::vector<Signature> entity_component_signatures;
 
-		std::unordered_map<std::type_index, System*> systems;
+		std::unordered_map<std::type_index, std::shared_ptr<System>> systems;
 
 		// Set of entities that are flaggeds to be added or removed in the next registry Update()
 		std::set<Entity> entities_to_be_added;
 		std::set<Entity> entities_to_be_killed;
 
 	public:
-		Registry() = default;
+		Registry()
+		{ 
+			Logger::Log("Registry constructor called");
+		}
+
+		~Registry()
+		{ 
+			Logger::Log("Registry destructor called");
+		}
 
 		// The registry Update() finally process the entities that are waiting to be added/killed to the systems
 		void Update();
@@ -191,7 +200,7 @@ void System::RequireComponent()
 template <typename TSystem, typename ...TArgs>
 void Registry::AddSystem(TArgs&& ...args)
 {
-	TSystem* new_system(new TSystem(std::forward<TArgs>(args)...));
+	std::shared_ptr<TSystem> new_system = std::make_shared<TSystem>(std::forward<TArgs>(args)...);
 	systems.insert(std::make_pair(std::type_index(typeid(TSystem)), new_system));
 }
 
@@ -228,20 +237,20 @@ void Registry::AddComponent(Entity entity, TArgs&& ...args)
 
 	if (!component_pools[component_id])
 	{
-		Pool<TComponent>* new_component_pool = new Pool<TComponent>();
+		std::shared_ptr<Pool<TComponent>> new_component_pool = std::make_shared<Pool<TComponent>>();
 		component_pools[component_id] = new_component_pool;
 	}
 
-	Pool<TComponent>* componentPool = component_pools[component_id];
+	std::shared_ptr<Pool<TComponent>> component_pool = std::static_pointer_cast<Pool<TComponent>>(component_pools[component_id]);
 
-	if (entity_id >= componentPool->GetSize())
+	if (entity_id >= component_pool->GetSize())
 	{
-		componentPool->Resize(num_entities);
+		component_pool->Resize(num_entities);
 	}
 
 	TComponent new_component(std::forward<TArgs>(args)...);
 
-	componentPool->Set(entity_id, new_component);
+	component_pool->Set(entity_id, new_component);
 	entity_component_signatures[entity_id].set(component_id);
 }
 
