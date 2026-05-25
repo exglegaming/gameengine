@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ECS_H
+#define ECS_H
 
 #include "../Logger/Logger.h"
 #include <bitset>
@@ -281,3 +282,5 @@ TComponent& Entity::GetComponent() const
 {
 	return registry->GetComponent<TComponent>(*this);
 }
+
+#endif

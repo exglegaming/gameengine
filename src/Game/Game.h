@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAME_H
+#define GAME_H
 
 #include "../ECS/ECS.h"
 #include <SDL2/SDL.h>
@@ -30,3 +31,5 @@ public:
     int window_width;
     int window_height;
 };
+
+#endif

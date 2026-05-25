@@ -3,7 +3,9 @@
 #include "../ECS/ECS.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/RigidBodyComponent.h"
+#include "../Components/SpriteComponent.h"
 #include "../Systems/MovementSystem.h"
+#include "../Systems/RenderSystem.h"
 #include <SDL2/SDL_image.h>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -83,22 +85,28 @@ void Game::Setup()
 {
 	// Add the systems that need to be processed in our game
 	registry->AddSystem<MovementSystem>();
+	registry->AddSystem<RenderSystem>();
 
     // Create an entity
 	Entity tank = registry->CreateEntity();
-
-	// Add some components to that entity
 	tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
-	tank.AddComponent<RigidBodyComponent>(glm::vec2(10.0, 50.0));
+	tank.AddComponent<RigidBodyComponent>(glm::vec2(40.0, 0.0));
+	tank.AddComponent<SpriteComponent>(10, 10);
+
+	Entity truck = registry->CreateEntity();
+	truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
+	truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
+	truck.AddComponent<SpriteComponent>(10, 50);
+	
 }
 
 void Game::Update() 
 {
     // If we are too fast, waste time until we reach the MILLISECS_PER_FRAME
-    int timeToWait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecs_previous_frame);
-    if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME) 
+    int time_to_wait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecs_previous_frame);
+    if (time_to_wait > 0 && time_to_wait <= MILLISECS_PER_FRAME) 
 	{
-        SDL_Delay(timeToWait);
+        SDL_Delay(time_to_wait);
     }
 
     // Difference in ticks from last frame, converrted to seconds
@@ -107,7 +115,7 @@ void Game::Update()
     // store the "previous" frame time
     millisecs_previous_frame = SDL_GetTicks();
 
-    // Ask all the systems to update
+    // Invoke all the systems that need to update
 	registry->GetSystem<MovementSystem>().Update(delta_time);
 
 	// Update the registry to process the entities that are waiting to be created/deleted
@@ -119,7 +127,8 @@ void Game::Render()
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
 
-    // TODO: Render game objects...
+    // Invoke all the systems that need to update
+	registry->GetSystem<RenderSystem>().Update(renderer);
 
     SDL_RenderPresent(renderer);
 }
