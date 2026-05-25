@@ -80,12 +80,15 @@ void Game::ProcessInput()
 
 void Game::Setup() 
 {
-    // Create some entities
+    // Create an entity
 	Entity tank = registry->CreateEntity();
 
 	// Add some components to that entity
-	registry->AddComponent<TransformComponet>(tank, glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
-	registry->AddComponent<RigidBodyComponent>(tank, glm::vec2(50.0, 0.0));
+	tank.AddComponent<TransformComponet>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
+	tank.AddComponent<RigidBodyComponent>(glm::vec2(10.0, 50.0));
+
+	// Remove a component from the entity
+	tank.RemoveComponent<TransformComponet>();
 }
 
 void Game::Update() 
@@ -98,7 +101,7 @@ void Game::Update()
     }
 
     // Difference in ticks from last frame, converrted to seconds
-    double deltaTime = (SDL_GetTicks() - millisecs_previous_frame) / 1000.0;
+    double delta_time = (SDL_GetTicks() - millisecs_previous_frame) / 1000.0;
 
     // store the "previous" frame time
     millisecs_previous_frame = SDL_GetTicks();
