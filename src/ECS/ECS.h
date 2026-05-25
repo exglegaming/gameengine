@@ -231,7 +231,7 @@ void Registry::AddComponent(Entity entity, TArgs&& ...args)
 	const auto component_id = Component<TComponent>::GetId();
 	const auto entity_id = entity.GetId();
 
-	if (component_id >= component_pools.size())
+	if (component_id >= static_cast<int>(component_pools.size()))
 	{
 		component_pools.resize(component_id + 1, nullptr);
 	}
