@@ -7,7 +7,7 @@
 
 Game::Game() 
 {
-    isRunning = false;
+    is_running = false;
 	registry = new Registry();
     Logger::Log("Game Constructor Called");
 }
@@ -24,10 +24,10 @@ void Game::Initialize() {
         return;
     }
 
-    SDL_DisplayMode displayMode;
-    SDL_GetCurrentDisplayMode(0, &displayMode);
-    windowWidth = displayMode.w;
-    windowHeight = displayMode.h;
+    SDL_DisplayMode display_mode;
+    SDL_GetCurrentDisplayMode(0, &display_mode);
+    window_width = display_mode.w;
+    window_height = display_mode.h;
 
     window = SDL_CreateWindow(
         NULL,
@@ -54,23 +54,23 @@ void Game::Initialize() {
 	// SDL_SetWindowSize(window, 1280, 720);
 	// SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
-    isRunning = true;
+    is_running = true;
 }
 
 void Game::ProcessInput() 
 {
-    SDL_Event sdlEvent;
-    while (SDL_PollEvent(&sdlEvent)) 
+    SDL_Event sdl_event;
+    while (SDL_PollEvent(&sdl_event)) 
 	{
-        switch (sdlEvent.type) 
+        switch (sdl_event.type) 
 		{
         case SDL_QUIT:
-            isRunning = false;
+            is_running = false;
             break;
         case SDL_KEYDOWN:
-            if (sdlEvent.key.keysym.sym == SDLK_ESCAPE) 
+            if (sdl_event.key.keysym.sym == SDLK_ESCAPE) 
 			{
-                isRunning = false;
+                is_running = false;
             }
             break;
         }
@@ -88,17 +88,17 @@ void Game::Setup()
 void Game::Update() 
 {
     // If we are too fast, waste time until we reach the MILLISECS_PER_FRAME
-    int timeToWait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecsPreviousFrame);
+    int timeToWait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecs_previous_frame);
     if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME) 
 	{
         SDL_Delay(timeToWait);
     }
 
     // Difference in ticks from last frame, converrted to seconds
-    double deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
+    double deltaTime = (SDL_GetTicks() - millisecs_previous_frame) / 1000.0;
 
     // store the "previous" frame time
-    millisecsPreviousFrame = SDL_GetTicks();
+    millisecs_previous_frame = SDL_GetTicks();
 
     // TODO:
 	// MovementSystem.Update();
@@ -119,7 +119,7 @@ void Game::Render()
 void Game::Run() 
 {
     Setup();
-    while (isRunning) 
+    while (is_running) 
 	{
         ProcessInput();
         Update();

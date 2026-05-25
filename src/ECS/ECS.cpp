@@ -2,7 +2,7 @@
 #include "../Logger/Logger.h"
 #include <algorithm>
 
-int IComponent::nextId = 0;
+int IComponent::next_id = 0;
 
 int Entity::GetId() const 
 {
@@ -29,37 +29,37 @@ std::vector<Entity> System::GetSystemEntities() const
 
 const Signature& System::GetComponentSignature() const
 {
-	return componentSignature;
+	return component_signature;
 }
 
 Entity Registry::CreateEntity()
 {
-	int entityId;
+	int entity_id;
 
-	entityId = numEntities++;
+	entity_id = num_entities++;
 
-	Entity entity(entityId);
-	entitiesToBeAdded.insert(entity);
+	Entity entity(entity_id);
+	entities_to_be_added.insert(entity);
 
-	if (entityId >= entityComponentSignatures.size())
+	if (entity_id >= entity_component_signatures.size())
 	{
-		entityComponentSignatures.resize(entityId + 1);
+		entity_component_signatures.resize(entity_id + 1);
 	}
 
-	Logger::Log("Entity created with id = " + std::to_string(entityId));
+	Logger::Log("Entity created with id = " + std::to_string(entity_id));
 	return entity;
 }
 
 void Registry::AddEntityToSystems(Entity entity)
 {
-	const auto entityId = entity.GetId();
-	const auto& entityComponentSignature = entityComponentSignatures[entityId];
+	const auto entity_id = entity.GetId();
+	const auto& entity_component_signature = entity_component_signatures[entity_id];
 
 	for (auto& system: systems)
 	{
-		const auto& systemComponentSignature = system.second->GetComponentSignature();
+		const auto& system_component_signature = system.second->GetComponentSignature();
 
-		bool isInterested = (entityComponentSignature & systemComponentSignature) == systemComponentSignature;
+		bool isInterested = (entity_component_signature & system_component_signature) == system_component_signature;
 
 		if (isInterested)
 		{
@@ -71,11 +71,11 @@ void Registry::AddEntityToSystems(Entity entity)
 void Registry::Update()
 {
 	// Add the entites that are waiting to be created to the active Systems
-	for (auto entity: entitiesToBeAdded)
+	for (auto entity: entities_to_be_added)
 	{
 		AddEntityToSystems(entity);
 	}
-	entitiesToBeAdded.clear();
+	entities_to_be_added.clear();
 
 	// TODO: Remove the entities that are waiting to be killed from the active Systems
 }
