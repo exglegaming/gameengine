@@ -25,12 +25,13 @@ struct IComponent
 template <typename T>
 class Component : public IComponent
 {
-	// Returns the unique id of Component<T>
-	static int GetId()
-	{
-		static auto id = next_id++;
-		return id;
-	}
+	public:
+		// Returns the unique id of Component<T>
+		static int GetId()
+		{
+			static auto id = next_id++;
+			return id;
+		}
 };
 
 class Entity 
@@ -252,6 +253,8 @@ void Registry::AddComponent(Entity entity, TArgs&& ...args)
 
 	component_pool->Set(entity_id, new_component);
 	entity_component_signatures[entity_id].set(component_id);
+
+	Logger::Log("Component id = " + std::to_string(component_id) + " was added to entity id " + std::to_string(entity_id));
 }
 
 template <typename TComponent>
