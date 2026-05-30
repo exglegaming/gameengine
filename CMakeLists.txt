@@ -6,13 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Source files
-# file(GLOB_RECURSE ENGINE_SOURCES
-#     src/*.cpp
-#     src/Game/*.cpp
-#     src/Logger/*.cpp
-#     src/ECS/*.cpp
-# )
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(Engine ${ENGINE_SOURCES})

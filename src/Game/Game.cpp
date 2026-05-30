@@ -35,7 +35,7 @@ void Game::initialize() {
     window_width = display_mode.w;
     window_height = display_mode.h;
     window = SDL_CreateWindow(
-        NULL,
+        nullptr,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         1280,
