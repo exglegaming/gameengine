@@ -25,7 +25,7 @@ std::string CurrentDateTimeToString()
  * @brief Logs messages to the console.
  * @param message Your message to display to the console.
 */ 
-void Logger::Log(const std::string& message) 
+void Logger::log(const std::string& message) 
 {
 	LogEntry logEntry;
 	logEntry.type = LOG_INFO;
@@ -34,7 +34,7 @@ void Logger::Log(const std::string& message)
 	messages.push_back(logEntry);
 }
 
-void Logger::Err(const std::string& message) 
+void Logger::err(const std::string& message) 
 {
 	LogEntry logEntry;
 	logEntry.type = LOG_ERROR;

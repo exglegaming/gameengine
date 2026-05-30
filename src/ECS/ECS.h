@@ -28,7 +28,7 @@ class Component : public IComponent
 {
 	public:
 		// Returns the unique id of Component<T>
-		static int GetId()
+		static int get_id()
 		{
 			static auto id = next_id++;
 			return id;
@@ -43,7 +43,7 @@ class Entity
 	public:
 		Entity(int id): id(id) {};
 		Entity(const Entity& entity) = default;
-		int GetId() const;
+		int get_id() const;
 		
 		Entity& operator =(const Entity& other) = default;
 		bool operator ==(const Entity& other) const { return id  == other.id; }
@@ -51,10 +51,10 @@ class Entity
 		bool operator >(const Entity& other) const { return id > other.id; }
 		bool operator <(const Entity& other) const { return id < other.id; }
 
-		template<typename TComponent, typename ...TArgs> void AddComponent(TArgs&& ...args);
-		template<typename TComponent> void RemoveComponent();
-		template<typename TComponent> bool HasComponent() const;
-		template<typename TComponent> TComponent& GetComponent() const;
+		template<typename TComponent, typename ...TArgs> void add_component(TArgs&& ...args);
+		template<typename TComponent> void remove_component();
+		template<typename TComponent> bool has_component() const;
+		template<typename TComponent> TComponent& get_component() const;
 
 		// Hold a pointer to the entity's owner registry
 		class Registry* registry;
@@ -71,13 +71,13 @@ class System
 		System() = default;
 		~System() = default;
 
-		void AddEntityToSystem(Entity entity);
-		void RemoveEntityFromSystem(Entity entity);
-		std::vector<Entity> GetSystemEntities() const;
-		const Signature& GetComponentSignature() const;
+		void add_entity_to_system(Entity entity);
+		void remove_entity_from_system(Entity entity);
+		std::vector<Entity> get_system_entities() const;
+		const Signature& get_component_signature() const;
 
 		// Define the component type T that entities must have to be considered by the system
-		template <typename TComponent> void RequireComponent();
+		template <typename TComponent> void require_component();
 };
 
 // Pool
@@ -98,13 +98,13 @@ class Pool : public IPool
 		Pool(int size = 100) { data.resize(size); }
 		virtual ~Pool() = default;
 
-		bool isEmpty() const { return data.empty(); }
-		int GetSize() const { return data.size(); }
-		void Resize(int n) { data.resize(n); }
-		void Clear() { data.clear(); }
-		void Add(T object) { data.push_back(object); }
-		void Set(int index, T object) { data[index] = object; }
-		T& Get(int index) { return static_cast<T&>(data[index]); }
+		bool is_empty() const { return data.empty(); }
+		int get_size() const { return data.size(); }
+		void resize(int n) { data.resize(n); }
+		void clear() { data.clear(); }
+		void add(T object) { data.push_back(object); }
+		void set(int index, T object) { data[index] = object; }
+		T& get(int index) { return static_cast<T&>(data[index]); }
 		T& operator [](unsigned int index) { return data[index]; }
 };
 
@@ -122,7 +122,7 @@ class Registry
 		std::vector<std::shared_ptr<IPool>> component_pools;
 
 		// Vecotr of component signatures per entity, saying which component is turned "on" for a given entity
-		// [Vector incex = entity id]
+		// [Vector index = entity id]
 		std::vector<Signature> entity_component_signatures;
 
 		std::unordered_map<std::type_index, std::shared_ptr<System>> systems;
@@ -134,77 +134,77 @@ class Registry
 	public:
 		Registry()
 		{ 
-			Logger::Log("Registry constructor called");
+			Logger::log("Registry constructor called");
 		}
 
 		~Registry()
 		{ 
-			Logger::Log("Registry destructor called");
+			Logger::log("Registry destructor called");
 		}
 
 		// The registry Update() finally process the entities that are waiting to be added/killed to the systems
-		void Update();
+		void update();
 
 		// Entity management
-		Entity CreateEntity();
+		Entity create_entity();
 
 		// Componet management
-		template <typename TComponent, typename ...TArgs> void AddComponent(Entity entity, TArgs&& ...args);
-		template <typename TComponent> void RemoveComponent(Entity entity);
-		template <typename TComponent> bool HasComponent(Entity entity) const;
-		template <typename TComponent> TComponent& GetComponent(Entity entity) const;
+		template <typename TComponent, typename ...TArgs> void add_component(Entity entity, TArgs&& ...args);
+		template <typename TComponent> void remove_component(Entity entity);
+		template <typename TComponent> bool has_component(Entity entity) const;
+		template <typename TComponent> TComponent& get_component(Entity entity) const;
 
 		// System management
-		template <typename TSystem, typename ...TArgs> void AddSystem(TArgs&& ...args);
-		template <typename TSystem> void RemoveSystem();
-		template <typename TSystem> bool HasSystem() const;
-		template <typename TSystem> TSystem& GetSystem() const;
+		template <typename TSystem, typename ...TArgs> void add_system(TArgs&& ...args);
+		template <typename TSystem> void remove_system();
+		template <typename TSystem> bool has_system() const;
+		template <typename TSystem> TSystem& get_system() const;
 
 		// Checks the component signature of an entity and add the entity to the systems
 		// that are interested in it
-		void AddEntityToSystems(Entity entity);
+		void add_entity_to_systems(Entity entity);
 };
 
 // Implementation of the function template
 template <typename TComponent> 
-void System::RequireComponent() 
+void System::require_component() 
 {
-	const auto component_id = Component<TComponent>::GetId();
+	const auto component_id = Component<TComponent>::get_id();
 	component_signature.set(component_id);
 }
 
 template <typename TSystem, typename ...TArgs>
-void Registry::AddSystem(TArgs&& ...args)
+void Registry::add_system(TArgs&& ...args)
 {
 	std::shared_ptr<TSystem> new_system = std::make_shared<TSystem>(std::forward<TArgs>(args)...);
 	systems.insert(std::make_pair(std::type_index(typeid(TSystem)), new_system));
 }
 
 template <typename TSystem>
-void Registry::RemoveSystem()
+void Registry::remove_system()
 {
 	auto system = systems.find(std::type_index(typeid(TSystem)));
 	systems.erase(system);
 }
 
 template <typename TSystem>
-bool Registry::HasSystem() const
+bool Registry::has_system() const
 {
 	return systems.find(std::type_index(typeid(TSystem))) != systems.end();
 }
 
 template <typename TSystem>
-TSystem& Registry::GetSystem() const
+TSystem& Registry::get_system() const
 {
 	auto system = systems.find(std::type_index(typeid(TSystem)));
 	return *(std::static_pointer_cast<TSystem>(system->second));
 }
 
 template <typename TComponent, typename ...TArgs> 
-void Registry::AddComponent(Entity entity, TArgs&& ...args)
+void Registry::add_component(Entity entity, TArgs&& ...args)
 {
-	const auto component_id = Component<TComponent>::GetId();
-	const auto entity_id = entity.GetId();
+	const auto component_id = Component<TComponent>::get_id();
+	const auto entity_id = entity.get_id();
 
 	if (component_id >= static_cast<int>(component_pools.size()))
 	{
@@ -219,68 +219,68 @@ void Registry::AddComponent(Entity entity, TArgs&& ...args)
 
 	std::shared_ptr<Pool<TComponent>> component_pool = std::static_pointer_cast<Pool<TComponent>>(component_pools[component_id]);
 
-	if (entity_id >= component_pool->GetSize())
+	if (entity_id >= component_pool->get_size())
 	{
-		component_pool->Resize(num_entities);
+		component_pool->resize(num_entities);
 	}
 
 	TComponent new_component(std::forward<TArgs>(args)...);
 
-	component_pool->Set(entity_id, new_component);
+	component_pool->set(entity_id, new_component);
 	entity_component_signatures[entity_id].set(component_id);
 
-	Logger::Log("Component id = " + std::to_string(component_id) + " was added to entity id " + std::to_string(entity_id));
+	Logger::log("Component id = " + std::to_string(component_id) + " was added to entity id " + std::to_string(entity_id));
 }
 
 template <typename TComponent>
-void Registry::RemoveComponent(Entity entity)
+void Registry::remove_component(Entity entity)
 {
-	const auto component_id = Component<TComponent>::GetId();
-	const auto entity_id = entity.GetId();
+	const auto component_id = Component<TComponent>::get_id();
+	const auto entity_id = entity.get_id();
 	entity_component_signatures[entity_id].set(component_id, false);
 
-	Logger::Log("Component id = " + std::to_string(component_id) + " was removed from entity id " + std::to_string(entity_id));
+	Logger::log("Component id = " + std::to_string(component_id) + " was removed from entity id " + std::to_string(entity_id));
 }
 
 template <typename TComponent>
-bool Registry::HasComponent(Entity entity) const
+bool Registry::has_component(Entity entity) const
 {
-	const auto component_id = Component<TComponent>::GetId();
-	const auto entity_id = entity.GetId();
+	const auto component_id = Component<TComponent>::get_id();
+	const auto entity_id = entity.get_id();
 	return entity_component_signatures[entity_id].test(component_id);
 }
 
 template <typename TComponent>
-TComponent& Registry::GetComponent(Entity entity) const
+TComponent& Registry::get_component(Entity entity) const
 {
-	const auto component_id = Component<TComponent>::GetId();
-	const auto entity_id = entity.GetId();
+	const auto component_id = Component<TComponent>::get_id();
+	const auto entity_id = entity.get_id();
 	auto component_pool = std::static_pointer_cast<Pool<TComponent>>(component_pools[component_id]);
-	return component_pool->Get(entity_id); 
+	return component_pool->get(entity_id); 
 }
 
 template <typename TComponent, typename ...TArgs> 
-void Entity::AddComponent(TArgs&& ...args)
+void Entity::add_component(TArgs&& ...args)
 {
-	registry->AddComponent<TComponent>(*this, std::forward<TArgs>(args)...);
+	registry->add_component<TComponent>(*this, std::forward<TArgs>(args)...);
 }
 
 template <typename TComponent>
-void Entity::RemoveComponent()
+void Entity::remove_component()
 {
-	registry->RemoveComponent<TComponent>(*this);
+	registry->remove_component<TComponent>(*this);
 }
 
 template <typename TComponent>
-bool Entity::HasComponent() const
+bool Entity::has_component() const
 {
-	return registry->HasComponent<TComponent>(*this);
+	return registry->has_component<TComponent>(*this);
 }
 
 template <typename TComponent>
-TComponent& Entity::GetComponent() const
+TComponent& Entity::get_component() const
 {
-	return registry->GetComponent<TComponent>(*this);
+	return registry->get_component<TComponent>(*this);
 }
 
 #endif

@@ -11,17 +11,17 @@ class RenderSystem : public System
 	public:
 		RenderSystem() 
 		{
-			RequireComponent<TransformComponent>();
-			RequireComponent<SpriteComponent>();
+			require_component<TransformComponent>();
+			require_component<SpriteComponent>();
 		}
 
-		void Update(SDL_Renderer* renderer) 
+		void update(SDL_Renderer* renderer) 
 		{
 			// Loop all entities that the system is interested in
-			for (auto entity: GetSystemEntities()) {
+			for (auto entity: get_system_entities()) {
 				// Upadate entity position based on its velocity
-				const auto transform = entity.GetComponent<TransformComponent>();
-				const auto sprite = entity.GetComponent<SpriteComponent>();
+				const auto transform = entity.get_component<TransformComponent>();
+				const auto sprite = entity.get_component<SpriteComponent>();
 
 				SDL_Rect obje_rect = {
 					static_cast<int>(transform.position.x),

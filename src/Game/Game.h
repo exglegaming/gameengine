@@ -20,13 +20,13 @@ private:
 public:
     Game();
     ~Game();
-    void Initialize();
-    void Run();
-    void Setup();
-    void ProcessInput();
-    void Update();
-    void Render();
-    void Destroy();
+    void initialize();
+    void run();
+    void setup();
+    void process_input();
+    void update();
+    void render();
+    void destroy();
 
     int window_width;
     int window_height;

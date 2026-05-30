@@ -10,17 +10,17 @@ class MovementSystem : public System
 	public:
 		MovementSystem() 
 		{
-			RequireComponent<TransformComponent>();
-			RequireComponent<RigidBodyComponent>();
+			require_component<TransformComponent>();
+			require_component<RigidBodyComponent>();
 		}
 
-		void Update(double delta_time) 
+		void update(double delta_time) 
 		{
 			// Loop all entities that the system is interested in
-			for (auto entity: GetSystemEntities()) {
+			for (auto entity: get_system_entities()) {
 				// Upadate entity position based on its velocity
-				auto& transform = entity.GetComponent<TransformComponent>();
-				const auto rigidbody = entity.GetComponent<RigidBodyComponent>();
+				auto& transform = entity.get_component<TransformComponent>();
+				const auto rigidbody = entity.get_component<RigidBodyComponent>();
 
 				transform.position.x += rigidbody.velocity.x * delta_time;
 				transform.position.y += rigidbody.velocity.y * delta_time;
