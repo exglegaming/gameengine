@@ -23,14 +23,7 @@ class RenderSystem : public System
 				const auto transform = entity.get_component<TransformComponent>();
 				const auto sprite = entity.get_component<SpriteComponent>();
 
-				SDL_Rect obje_rect = {
-					static_cast<int>(transform.position.x),
-					static_cast<int>(transform.position.y),
-					sprite.width,
-					sprite.height
-				};
-				SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-				SDL_RenderFillRect(renderer, &obje_rect);
+				// TODO: Draw the PNG texture
 			}
 				
 		}

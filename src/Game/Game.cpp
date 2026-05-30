@@ -14,12 +14,13 @@ Game::Game()
 {
     is_running = false;
 	registry = std::make_unique<Registry>();
-    Logger::log("Game Constructor Called");
+	asset_store = std::make_unique<AssetStore>();
+    Logger::log("Game constructor called!");
 }
 
 Game::~Game() 
 {
-    Logger::log("Game Deconstructor Called");
+    Logger::log("Game destructor called!");
 }
 
 void Game::initialize() {
@@ -87,17 +88,20 @@ void Game::setup()
 	registry->add_system<MovementSystem>();
 	registry->add_system<RenderSystem>();
 
+	// Adding assets to the asset store
+	asset_store->add_texture(renderer, "tank-image", "./assets/images/tank-panther-right.png");
+	asset_store->add_texture(renderer, "truck-image", "./assets/images/truck-ford-right.png");
+
     // Create an entity
 	Entity tank = registry->create_entity();
 	tank.add_component<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
 	tank.add_component<RigidBodyComponent>(glm::vec2(40.0, 0.0));
-	tank.add_component<SpriteComponent>(10, 10);
+	tank.add_component<SpriteComponent>("tank-image", 10, 10);
 
 	Entity truck = registry->create_entity();
 	truck.add_component<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
 	truck.add_component<RigidBodyComponent>(glm::vec2(0.0, 50.0));
-	truck.add_component<SpriteComponent>(10, 50);
-	
+	truck.add_component<SpriteComponent>("truck-image", 10, 50);
 }
 
 void Game::update() 
