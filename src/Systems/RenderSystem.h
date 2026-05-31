@@ -6,6 +6,8 @@
 #include "../Components/SpriteComponent.h"
 #include "../AssetStore/AssetStore.h"
 #include <SDL2/SDL.h>
+#include <vector>
+#include <algorithm>
 
 class RenderSystem : public System 
 {
@@ -18,8 +20,16 @@ class RenderSystem : public System
 
 		void update(SDL_Renderer* renderer, std::unique_ptr<AssetStore>& asset_store) 
 		{
+			// Sort all the entities of our system by the z-index
+			std::vector<Entity> z_index_entities = get_system_entities();
+			std::sort(z_index_entities.begin(), z_index_entities.end(), [](const Entity& entity_a, const Entity& entity_b) {
+				const auto sprite_a = entity_a.get_component<SpriteComponent>();
+				const auto sprite_b = entity_b.get_component<SpriteComponent>();
+				return sprite_a.z_index < sprite_b.z_index;
+			});
+
 			// Loop all entities that the system is interested in
-			for (auto entity: get_system_entities()) {
+			for (auto entity: z_index_entities) {
 				// Update entity position based on its velocity
 				const auto transform = entity.get_component<TransformComponent>();
 				const auto sprite = entity.get_component<SpriteComponent>();
