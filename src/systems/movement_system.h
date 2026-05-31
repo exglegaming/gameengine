@@ -1,5 +1,4 @@
-#ifndef MOVEMENTSYSTEM_H
-#define MOVEMENTSYSTEM_H
+#pragma once
 
 #include "../ecs/ecs.h"
 #include "../components/transform_component.h"
@@ -27,5 +26,3 @@ class movement_system : public ecs::system
 			}
 		}
 };
-
-#endif

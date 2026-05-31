@@ -1,5 +1,4 @@
-#ifndef GAME_H
-#define GAME_H
+#pragma once
 
 #include <SDL2/SDL.h>
 #include <memory>
@@ -36,5 +35,3 @@ class game
 		int window_width;
 		int window_height;
 };
-
-#endif

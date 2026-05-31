@@ -9,8 +9,10 @@
 #include "../components/transform_component.h"
 #include "../components/rigid_body_component.h"
 #include "../components/sprite_component.h"
+#include "../components/animation_component.h"
 #include "../systems/movement_system.h"
 #include "../systems/render_system.h"
+#include "../systems/animation_system.h"
 
 game::game() 
 {
@@ -34,14 +36,14 @@ void game::initialize() {
 
     SDL_DisplayMode display_mode;
     SDL_GetCurrentDisplayMode(0, &display_mode);
-    window_width = display_mode.w;
-    window_height = display_mode.h;
+    window_width = 1280; // display_mode.w;
+    window_height = 720; // display_mode.h;
     window = SDL_CreateWindow(
         nullptr,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        1280,
-    	720,
+        window_width,
+    	window_height,
         SDL_WINDOW_SHOWN
     );
     if (!window) {
@@ -84,10 +86,13 @@ void game::load_level(int level)
 	// Add the systems that need to be processed in our game
 	registry->add_system<movement_system>();
 	registry->add_system<render_system>();
+	registry->add_system<animation_system>();
 
 	// Adding assets to the asset store
 	assets->add_texture(renderer, "tank-image", "../assets/images/tank-panther-right.png");
 	assets->add_texture(renderer, "truck-image", "../assets/images/truck-ford-right.png");
+	assets->add_texture(renderer, "chopper-image", "../assets/images/chopper.png");
+	assets->add_texture(renderer, "radar-image", "../assets/images/radar.png");
 	assets->add_texture(renderer, "tilemap-image", "../assets/tilemaps/jungle.png");
 
 	// Load the tilemap
@@ -119,21 +124,26 @@ void game::load_level(int level)
 
     // Create an entity
 	ecs::entity chopper = registry->create_entity();
-	chopper.add_component<transform_component>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+	chopper.add_component<transform_component>(glm::vec2(10.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
 	chopper.add_component<rigid_body_component>(glm::vec2(0.0, 0.0));
 	chopper.add_component<sprite_component>("chopper-image", 32, 32, 1);
-	// chopper.add_component<AnimationComponent>();
+	chopper.add_component<animation_component>(2, 15, true);
 
-	// ecs::entity tank = registry->create_entity();
-	// tank.add_component<transform_component>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
-	// tank.add_component<rigid_body_component>(glm::vec2(30.0, 0.0));
-	// tank.add_component<sprite_component>("tank-image", 32, 32, 1);
+	ecs::entity radar = registry->create_entity();
+	radar.add_component<transform_component>(glm::vec2(window_width - 74, 10.0), glm::vec2(1.0, 1.0), 0.0);
+	radar.add_component<rigid_body_component>(glm::vec2(0.0, 0.0));
+	radar.add_component<sprite_component>("radar-image", 64, 64, 2);
+	radar.add_component<animation_component>(8, 5, true);
 
-	// ecs::entity truck = registry->create_entity();
-	// truck.add_component<transform_component>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
-	// truck.add_component<rigid_body_component>(glm::vec2(20.0, 0.0));
-	// truck.add_component<sprite_component>("truck-image", 32, 32, 2);
+	ecs::entity tank = registry->create_entity();
+	tank.add_component<transform_component>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+	tank.add_component<rigid_body_component>(glm::vec2(30.0, 0.0));
+	tank.add_component<sprite_component>("tank-image", 32, 32, 1);
 
+	ecs::entity truck = registry->create_entity();
+	truck.add_component<transform_component>(glm::vec2(10.0, 50.0), glm::vec2(1.0, 1.0), 0.0);
+	truck.add_component<rigid_body_component>(glm::vec2(20.0, 0.0));
+	truck.add_component<sprite_component>("truck-image", 32, 32, 2);
 }
 
 void game::setup() 
@@ -158,6 +168,7 @@ void game::update()
 
     // Invoke all the systems that need to update
 	registry->get_system<movement_system>().update(delta_time);
+	registry->get_system<animation_system>().update();
 
 	// Update the registry to process the entities that are waiting to be created/deleted
 	registry->update();

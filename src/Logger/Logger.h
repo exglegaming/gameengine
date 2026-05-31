@@ -1,5 +1,4 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -24,5 +23,3 @@ class logger
 		static void log(const std::string& message);
 		static void err(const std::string& message);
 };
-
-#endif

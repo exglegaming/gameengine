@@ -1,5 +1,4 @@
-#ifndef ECS_H
-#define ECS_H
+#pragma once
 
 #include <bitset>
 #include <vector>
@@ -286,4 +285,3 @@ namespace ecs
 		return registry->get_component<t_component>(*this);
 	}
 }
-#endif

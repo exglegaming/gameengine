@@ -1,5 +1,4 @@
-#ifndef RENDERSYSTEM_H
-#define RENDERSYSTEM_H
+#pragma once
 
 #include <SDL2/SDL.h>
 #include <vector>
@@ -61,5 +60,3 @@ class render_system : public ecs::system
 				
 		}
 };
-
-#endif

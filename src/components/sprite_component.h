@@ -1,5 +1,4 @@
-#ifndef SPRITECOMPONENT_H
-#define SPRITECOMPONENT_H
+#pragma once
 
 #include <string>
 #include <SDL2/SDL.h>
@@ -21,5 +20,3 @@ struct sprite_component
 		this->src_rect = {src_rect_x, src_rect_y, width, height};
 	}
 };
-
-#endif
