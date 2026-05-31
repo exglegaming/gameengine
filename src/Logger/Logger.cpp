@@ -1,9 +1,9 @@
-#include "Logger.h"
+#include "logger.h"
 #include <iostream>
 #include <chrono>
 #include <ctime>
 
-std::vector<LogEntry> Logger::messages;
+std::vector<log_entry> logger::messages;
 
 std::string CurrentDateTimeToString() 
 {
@@ -25,18 +25,18 @@ std::string CurrentDateTimeToString()
  * @brief Logs messages to the console.
  * @param message Your message to display to the console.
 */ 
-void Logger::log(const std::string& message) 
+void logger::log(const std::string& message) 
 {
-	LogEntry logEntry;
+	log_entry logEntry;
 	logEntry.type = LOG_INFO;
 	logEntry.message = " LOG: [" + CurrentDateTimeToString() + "]: " + message;
 	std::cout << "\x1B[32m" << logEntry.message << "\033[0m" << std::endl;
 	messages.push_back(logEntry);
 }
 
-void Logger::err(const std::string& message) 
+void logger::err(const std::string& message) 
 {
-	LogEntry logEntry;
+	log_entry logEntry;
 	logEntry.type = LOG_ERROR;
 	logEntry.message = " ERR: [" + CurrentDateTimeToString() + "]: " + message;
 	std::cout << "\x1B[91m" << logEntry.message << "\033[0m" << std::endl;

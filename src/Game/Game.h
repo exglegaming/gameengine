@@ -1,38 +1,40 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "../ECS/ECS.h"
-#include "../AssetStore/AssetStore.h"
 #include <SDL2/SDL.h>
+#include <memory>
+
+#include "../ecs/ecs.h"
+#include "../asset_store/asset_store.h"
 
 const int FPS = 60;
 const int MILLISECS_PER_FRAME = 1000 / FPS;
 
-class Game 
+class game 
 {
-private:
-    bool is_running;
-    int millisecs_previous_frame = 0;
-    SDL_Window* window;
-    SDL_Renderer* renderer;
+	private:
+		bool is_running;
+		int millisecs_previous_frame = 0;
+		SDL_Window* window;
+		SDL_Renderer* renderer;
 
-	std::unique_ptr<Registry> registry;
-	std::unique_ptr<AssetStore> asset_store;
+		std::unique_ptr<ecs::registry> registry;
+		std::unique_ptr<asset_store> assets;
 
-public:
-    Game();
-    ~Game();
-    void initialize();
-    void run();
-    void setup();
-	void load_level(int level);
-    void process_input();
-    void update();
-    void render();
-    void destroy();
+	public:
+		game();
+		~game();
+		void initialize();
+		void run();
+		void setup();
+		void load_level(int level);
+		void process_input();
+		void update();
+		void render();
+		void destroy();
 
-    int window_width;
-    int window_height;
+		int window_width;
+		int window_height;
 };
 
 #endif

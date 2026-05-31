@@ -1,38 +1,39 @@
 #ifndef RENDERSYSTEM_H
 #define RENDERSYSTEM_H
 
-#include "../ECS/ECS.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/SpriteComponent.h"
-#include "../AssetStore/AssetStore.h"
 #include <SDL2/SDL.h>
 #include <vector>
 #include <algorithm>
 
-class RenderSystem : public System 
+#include "../ecs/ecs.h"
+#include "../components/transform_component.h"
+#include "../components/sprite_component.h"
+#include "../asset_store/asset_store.h"
+
+class render_system : public ecs::system 
 {
 	public:
-		RenderSystem() 
+		render_system() 
 		{
-			require_component<TransformComponent>();
-			require_component<SpriteComponent>();
+			require_component<transform_component>();
+			require_component<sprite_component>();
 		}
 
-		void update(SDL_Renderer* renderer, std::unique_ptr<AssetStore>& asset_store) 
+		void update(SDL_Renderer* renderer, std::unique_ptr<asset_store>& assets) 
 		{
 			// Sort all the entities of our system by the z-index
-			std::vector<Entity> z_index_entities = get_system_entities();
-			std::sort(z_index_entities.begin(), z_index_entities.end(), [](const Entity& entity_a, const Entity& entity_b) {
-				const auto sprite_a = entity_a.get_component<SpriteComponent>();
-				const auto sprite_b = entity_b.get_component<SpriteComponent>();
+			std::vector<ecs::entity> z_index_entities = get_system_entities();
+			std::sort(z_index_entities.begin(), z_index_entities.end(), [](const ecs::entity& entity_a, const ecs::entity& entity_b) {
+				const auto sprite_a = entity_a.get_component<sprite_component>();
+				const auto sprite_b = entity_b.get_component<sprite_component>();
 				return sprite_a.z_index < sprite_b.z_index;
 			});
 
 			// Loop all entities that the system is interested in
 			for (auto entity: z_index_entities) {
 				// Update entity position based on its velocity
-				const auto transform = entity.get_component<TransformComponent>();
-				const auto sprite = entity.get_component<SpriteComponent>();
+				const auto transform = entity.get_component<transform_component>();
+				const auto sprite = entity.get_component<sprite_component>();
 
 				// Set the source rectangle of our original sprite texture
 				SDL_Rect src_rect = sprite.src_rect;
@@ -47,7 +48,7 @@ class RenderSystem : public System
 
 				SDL_RenderCopyEx(
 					renderer,
-					asset_store->get_texture(sprite.asset_id),
+					assets->get_texture(sprite.asset_id),
 					&src_rect,
 					&dest_rect,
 					transform.rotation,

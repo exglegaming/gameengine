@@ -4,23 +4,23 @@
 #include <vector>
 #include <string>
 
-enum LogType 
+enum log_type 
 {
 	LOG_INFO,
 	LOG_WARNING,
 	LOG_ERROR
 };
 
-struct LogEntry 
+struct log_entry 
 {
-	LogType type;
+	log_type type;
 	std::string message;
 };
 
-class Logger 
+class logger 
 {
 	public:
-		static std::vector<LogEntry> messages;
+		static std::vector<log_entry> messages;
 		static void log(const std::string& message);
 		static void err(const std::string& message);
 };

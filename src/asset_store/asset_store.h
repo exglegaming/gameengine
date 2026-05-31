@@ -5,7 +5,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 
-class AssetStore
+class asset_store
 {
 	private:
 		std::map<std::string, SDL_Texture*> textures;
@@ -13,8 +13,8 @@ class AssetStore
 		// TODO: Create map for audio
 
 	public:
-		AssetStore();
-		~AssetStore();
+		asset_store();
+		~asset_store();
 
 		void clear_assets();
 		void add_texture(SDL_Renderer* renderer, const std::string& asset_id, const std::string& file_path);

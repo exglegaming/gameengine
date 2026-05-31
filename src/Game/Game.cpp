@@ -1,33 +1,34 @@
-#include "Game.h"
-#include "../Logger/Logger.h"
-#include "../ECS/ECS.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/RigidBodyComponent.h"
-#include "../Components/SpriteComponent.h"
-#include "../Systems/MovementSystem.h"
-#include "../Systems/RenderSystem.h"
 #include <SDL2/SDL_image.h>
 #include <glm/glm.hpp>
 #include <iostream>
 #include <fstream>
 
-Game::Game() 
+#include "game.h"
+#include "../logger/logger.h"
+#include "../ecs/ecs.h"
+#include "../components/transform_component.h"
+#include "../components/rigid_body_component.h"
+#include "../components/sprite_component.h"
+#include "../systems/movement_system.h"
+#include "../systems/render_system.h"
+
+game::game() 
 {
     is_running = false;
-	registry = std::make_unique<Registry>();
-	asset_store = std::make_unique<AssetStore>();
-    Logger::log("Game constructor called!");
+	registry = std::make_unique<ecs::registry>();
+	assets = std::make_unique<asset_store>();
+    logger::log("Game constructor called!");
 }
 
-Game::~Game() 
+game::~game() 
 {
-    Logger::log("Game destructor called!");
+    logger::log("Game destructor called!");
 }
 
-void Game::initialize() {
+void game::initialize() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) 
 	{
-        Logger::err("Error initializing SDL.");
+        logger::err("Error initializing SDL.");
         return;
     }
 
@@ -44,13 +45,13 @@ void Game::initialize() {
         SDL_WINDOW_SHOWN
     );
     if (!window) {
-        Logger::err("Error creating SDL Window.");
+        logger::err("Error creating SDL Window.");
         return;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer) {
-        Logger::err("Error creating SDL Renderer.");
+        logger::err("Error creating SDL Renderer.");
         return;
     }
     
@@ -58,7 +59,7 @@ void Game::initialize() {
     is_running = true;
 }
 
-void Game::process_input() 
+void game::process_input() 
 {
     SDL_Event sdl_event;
     while (SDL_PollEvent(&sdl_event)) 
@@ -78,16 +79,16 @@ void Game::process_input()
     }
 }
 
-void Game::load_level(int level)
+void game::load_level(int level)
 {
 	// Add the systems that need to be processed in our game
-	registry->add_system<MovementSystem>();
-	registry->add_system<RenderSystem>();
+	registry->add_system<movement_system>();
+	registry->add_system<render_system>();
 
 	// Adding assets to the asset store
-	asset_store->add_texture(renderer, "tank-image", "../assets/images/tank-panther-right.png");
-	asset_store->add_texture(renderer, "truck-image", "../assets/images/truck-ford-right.png");
-	asset_store->add_texture(renderer, "tilemap-image", "../assets/tilemaps/jungle.png");
+	assets->add_texture(renderer, "tank-image", "../assets/images/tank-panther-right.png");
+	assets->add_texture(renderer, "truck-image", "../assets/images/truck-ford-right.png");
+	assets->add_texture(renderer, "tilemap-image", "../assets/tilemaps/jungle.png");
 
 	// Load the tilemap
 	int tile_size = 32;
@@ -109,32 +110,38 @@ void Game::load_level(int level)
 			int src_rect_x = std::atoi(&ch) * tile_size;
 			map_file.ignore();
 
-			Entity tile = registry->create_entity();
-			tile.add_component<TransformComponent>(glm::vec2(x * (tile_scale * tile_size), y * (tile_scale * tile_size)), glm::vec2(tile_scale, tile_scale), 0.0);
-			tile.add_component<SpriteComponent>("tilemap-image", tile_size, tile_size, 0, src_rect_x, src_rect_y);
+			ecs::entity tile = registry->create_entity();
+			tile.add_component<transform_component>(glm::vec2(x * (tile_scale * tile_size), y * (tile_scale * tile_size)), glm::vec2(tile_scale, tile_scale), 0.0);
+			tile.add_component<sprite_component>("tilemap-image", tile_size, tile_size, 0, src_rect_x, src_rect_y);
 		}
 	}
 	map_file.close();
 
     // Create an entity
-	Entity tank = registry->create_entity();
-	tank.add_component<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
-	tank.add_component<RigidBodyComponent>(glm::vec2(30.0, 0.0));
-	tank.add_component<SpriteComponent>("tank-image", 32, 32, 1);
+	ecs::entity chopper = registry->create_entity();
+	chopper.add_component<transform_component>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+	chopper.add_component<rigid_body_component>(glm::vec2(0.0, 0.0));
+	chopper.add_component<sprite_component>("chopper-image", 32, 32, 1);
+	// chopper.add_component<AnimationComponent>();
 
-	Entity truck = registry->create_entity();
-	truck.add_component<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
-	truck.add_component<RigidBodyComponent>(glm::vec2(20.0, 0.0));
-	truck.add_component<SpriteComponent>("truck-image", 32, 32, 2);
+	// ecs::entity tank = registry->create_entity();
+	// tank.add_component<transform_component>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+	// tank.add_component<rigid_body_component>(glm::vec2(30.0, 0.0));
+	// tank.add_component<sprite_component>("tank-image", 32, 32, 1);
+
+	// ecs::entity truck = registry->create_entity();
+	// truck.add_component<transform_component>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+	// truck.add_component<rigid_body_component>(glm::vec2(20.0, 0.0));
+	// truck.add_component<sprite_component>("truck-image", 32, 32, 2);
 
 }
 
-void Game::setup() 
+void game::setup() 
 {
 	load_level(1);
 }
 
-void Game::update() 
+void game::update() 
 {
     // If we are too fast, waste time until we reach the MILLISECS_PER_FRAME
     int time_to_wait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecs_previous_frame);
@@ -150,24 +157,24 @@ void Game::update()
     millisecs_previous_frame = SDL_GetTicks();
 
     // Invoke all the systems that need to update
-	registry->get_system<MovementSystem>().update(delta_time);
+	registry->get_system<movement_system>().update(delta_time);
 
 	// Update the registry to process the entities that are waiting to be created/deleted
 	registry->update();
 }
 
-void Game::render() 
+void game::render() 
 {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
     SDL_RenderClear(renderer);
 
     // Invoke all the systems that need to update
-	registry->get_system<RenderSystem>().update(renderer, asset_store);
+	registry->get_system<render_system>().update(renderer, assets);
 
     SDL_RenderPresent(renderer);
 }
 
-void Game::run() 
+void game::run() 
 {
     setup();
     while (is_running) 
@@ -178,7 +185,7 @@ void Game::run()
     }
 }
 
-void Game::destroy() 
+void game::destroy() 
 {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

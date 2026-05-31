@@ -4,7 +4,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 
-struct SpriteComponent 
+struct sprite_component 
 {
 	std::string asset_id;
 	int width;
@@ -12,7 +12,7 @@ struct SpriteComponent
 	int z_index;
 	SDL_Rect src_rect;
 
-	SpriteComponent(std::string asset_id = "", int width = 0, int height = 0, int z_index = 0, int src_rect_x = 0, int src_rect_y = 0)
+	sprite_component(std::string asset_id = "", int width = 0, int height = 0, int z_index = 0, int src_rect_x = 0, int src_rect_y = 0)
 	{
 		this->asset_id = asset_id;
 		this->width = width;
