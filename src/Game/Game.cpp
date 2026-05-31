@@ -9,6 +9,7 @@
 #include <SDL2/SDL_image.h>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <fstream>
 
 Game::Game() 
 {
@@ -39,7 +40,7 @@ void Game::initialize() {
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         1280,
-        720,
+    	720,
         SDL_WINDOW_SHOWN
     );
     if (!window) {
@@ -52,13 +53,8 @@ void Game::initialize() {
         Logger::err("Error creating SDL Renderer.");
         return;
     }
-    // SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-	
-	// Make Window windowed
-	// SDL_SetWindowFullscreen(window, 0);
-	// SDL_SetWindowSize(window, 1280, 720);
-	// SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-
+    
+	// SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
     is_running = true;
 }
 
@@ -82,7 +78,7 @@ void Game::process_input()
     }
 }
 
-void Game::setup() 
+void Game::load_level(int level)
 {
 	// Add the systems that need to be processed in our game
 	registry->add_system<MovementSystem>();
@@ -91,6 +87,34 @@ void Game::setup()
 	// Adding assets to the asset store
 	asset_store->add_texture(renderer, "tank-image", "../assets/images/tank-panther-right.png");
 	asset_store->add_texture(renderer, "truck-image", "../assets/images/truck-ford-right.png");
+	asset_store->add_texture(renderer, "tilemap-image", "../assets/tilemaps/jungle.png");
+
+	// Load the tilemap
+	int tile_size = 32;
+	double tile_scale = 2.0;
+	int map_num_cols = 25;
+	int map_num_rows = 20;
+
+	std::fstream map_file;
+	map_file.open("../assets/tilemaps/jungle.map");
+
+	for (int y = 0; y < map_num_rows; y++)
+	{
+		for (int x = 0; x < map_num_cols; x++)
+		{
+			char ch;
+			map_file.get(ch);
+			int src_rect_y = std::atoi(&ch) * tile_size;
+			map_file.get(ch);
+			int src_rect_x = std::atoi(&ch) * tile_size;
+			map_file.ignore();
+
+			Entity tile = registry->create_entity();
+			tile.add_component<TransformComponent>(glm::vec2(x * (tile_scale * tile_size), y * (tile_scale * tile_size)), glm::vec2(tile_scale, tile_scale), 0.0);
+			tile.add_component<SpriteComponent>("tilemap-image", tile_size, tile_size, src_rect_x, src_rect_y);
+		}
+	}
+	map_file.close();
 
     // Create an entity
 	Entity tank = registry->create_entity();
@@ -102,6 +126,12 @@ void Game::setup()
 	truck.add_component<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
 	truck.add_component<RigidBodyComponent>(glm::vec2(0.0, 50.0));
 	truck.add_component<SpriteComponent>("truck-image", 32, 32);
+
+}
+
+void Game::setup() 
+{
+	load_level(1);
 }
 
 void Game::update() 

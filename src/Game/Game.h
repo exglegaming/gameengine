@@ -25,6 +25,7 @@ public:
     void initialize();
     void run();
     void setup();
+	void load_level(int level);
     void process_input();
     void update();
     void render();
