@@ -10,9 +10,12 @@
 #include "../components/rigid_body_component.h"
 #include "../components/sprite_component.h"
 #include "../components/animation_component.h"
+#include "../components/box_collider_component.h"
 #include "../systems/movement_system.h"
 #include "../systems/render_system.h"
 #include "../systems/animation_system.h"
+#include "../systems/collision_system.h"
+#include "../systems/debug_render_system.h"
 
 game::game() 
 {
@@ -76,6 +79,11 @@ void game::process_input()
 			{
                 is_running = false;
             }
+
+			if (sdl_event.key.keysym.sym == SDLK_d)
+			{
+				is_debug_mode = !is_debug_mode;
+			}
             break;
         }
     }
@@ -87,6 +95,8 @@ void game::load_level(int level)
 	registry->add_system<movement_system>();
 	registry->add_system<render_system>();
 	registry->add_system<animation_system>();
+	registry->add_system<collision_system>();
+	registry->add_system<debug_render_system>();
 
 	// Adding assets to the asset store
 	assets->add_texture(renderer, "tank-image", "../assets/images/tank-panther-right.png");
@@ -136,14 +146,16 @@ void game::load_level(int level)
 	radar.add_component<animation_component>(8, 5, true);
 
 	ecs::entity tank = registry->create_entity();
-	tank.add_component<transform_component>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
-	tank.add_component<rigid_body_component>(glm::vec2(30.0, 0.0));
+	tank.add_component<transform_component>(glm::vec2(500.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+	tank.add_component<rigid_body_component>(glm::vec2(-30.0, 0.0));
 	tank.add_component<sprite_component>("tank-image", 32, 32, 1);
+	tank.add_component<box_collider_component>(32, 32);
 
 	ecs::entity truck = registry->create_entity();
-	truck.add_component<transform_component>(glm::vec2(10.0, 50.0), glm::vec2(1.0, 1.0), 0.0);
+	truck.add_component<transform_component>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
 	truck.add_component<rigid_body_component>(glm::vec2(20.0, 0.0));
 	truck.add_component<sprite_component>("truck-image", 32, 32, 2);
+	truck.add_component<box_collider_component>(32, 32);
 }
 
 void game::setup() 
@@ -169,9 +181,12 @@ void game::update()
     // Invoke all the systems that need to update
 	registry->get_system<movement_system>().update(delta_time);
 	registry->get_system<animation_system>().update();
+	registry->get_system<collision_system>().update();
 
 	// Update the registry to process the entities that are waiting to be created/deleted
 	registry->update();
+
+
 }
 
 void game::render() 
@@ -181,6 +196,11 @@ void game::render()
 
     // Invoke all the systems that need to update
 	registry->get_system<render_system>().update(renderer, assets);
+	if (is_debug_mode)
+	{
+		registry->get_system<debug_render_system>().update(renderer);
+	}
+	
 
     SDL_RenderPresent(renderer);
 }
